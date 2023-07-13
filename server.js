@@ -1,85 +1,114 @@
-const express = require('express');
-const mysql = require('mysql2');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-require('dotenv').config();
+// const express = require('express');
+// const mysql = require('mysql2');
+// const bodyParser = require('body-parser');
+// const cors = require('cors');
+// require('dotenv').config()
 
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+// const app = express();
+// app.use(bodyParser.json());
+// app.use(cors());
 
-// กำหนดการเชื่อมต่อฐานข้อมูล MySQL
-// const connection = mysql.createConnection({
-//   host: 'localhost',
-//   user: 'root',
-//   password: '',
-//   database: 'list',
+// // กำหนดการเชื่อมต่อฐานข้อมูล MySQL
+// // const connection = mysql.createConnection({
+// //   host: 'localhost',
+// //   user: 'root',
+// //   password: '',
+// //   database: 'list',
+// // });
+// const connection = mysql.createConnection(process.env.DATABASE_URL)
+
+// // เพิ่มข้อมูล
+// app.post('/api/users', (req, res) => {
+//   const { rank, first_name, last_name, phone_number } = req.body;
+
+//   connection.query(
+//     'INSERT INTO users (rank, first_name, last_name, phone_number) VALUES (?, ?, ?, ?)',
+//     [rank, first_name, last_name, phone_number],
+//     (err, results) => {
+//       if (err) throw err;
+
+//       res.json({ message: 'User created successfully', id: results.insertId });
+//     }
+//   );
 // });
-const connection = mysql.createConnection(process.env.DATABASE_URL)
 
-// เพิ่มข้อมูล
-app.post('/api/users', (req, res) => {
-  const { rank, first_name, last_name, phone_number } = req.body;
+// // อ่านข้อมูลทั้งหมด
+// app.get('/api/users', (req, res) => {
+//   connection.query('SELECT * FROM users', (err, results) => {
+//     if (err) throw err;
 
-  connection.query(
-    'INSERT INTO users (rank, first_name, last_name, phone_number) VALUES (?, ?, ?, ?)',
-    [rank, first_name, last_name, phone_number],
-    (err, results) => {
+//     res.json(results);
+//   });
+// });
 
-      res.json({ message: 'User created successfully', id: results.insertId });
-    }
-  );
-});
+// // อ่านข้อมูลตาม ID
+// app.get('/api/users/:id', (req, res) => {
+//   const id = req.params.id;
 
-// อ่านข้อมูลทั้งหมด
-app.get('/api/users', (req, res) => {
-  connection.query('SELECT * FROM users', (err, results) => {
+//   connection.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
+//     if (err) throw err;
 
-    res.json(results);
-  });
-});
+//     if (results.length === 0) {
+//       res.status(404).json({ message: 'User not found' });
+//     } else {
+//       res.json(results[0]);
+//     }
+//   });
+// });
 
-// อ่านข้อมูลตาม ID
-app.get('/api/users/:id', (req, res) => {
-  const id = req.params.id;
+// // อัปเดตข้อมูล
+// app.put('/api/users/:id', (req, res) => {
+//   const id = req.params.id;
+//   const { rank, first_name, last_name, phone_number } = req.body;
 
-  connection.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
+//   connection.query(
+//     'UPDATE users SET rank = ?, first_name = ?, last_name = ?, phone_number = ? WHERE id = ?',
+//     [rank, first_name, last_name, phone_number, id],
+//     (err, results) => {
+//       if (err) throw err;
 
-    if (results.length === 0) {
-      res.status(404).json({ message: 'User not found' });
-    } else {
-      res.json(results[0]);
-    }
-  });
-});
+//       res.json({ message: 'User updated successfully' });
+//     }
+//   );
+// });
 
-// อัปเดตข้อมูล
-app.put('/api/users/:id', (req, res) => {
-  const id = req.params.id;
-  const { rank, first_name, last_name, phone_number } = req.body;
+// // ลบข้อมูล
+// app.delete('/api/users/:id', (req, res) => {
+//   const id = req.params.id;
 
-  connection.query(
-    'UPDATE users SET rank = ?, first_name = ?, last_name = ?, phone_number = ? WHERE id = ?',
-    [rank, first_name, last_name, phone_number, id],
-    (err, results) => {
+//   connection.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
+//     if (err) throw err;
 
-      res.json({ message: 'User updated successfully' });
-    }
-  );
-});
+//     res.json({ message: 'User deleted successfully' });
+//   });
+// });
 
-// ลบข้อมูล
-app.delete('/api/users/:id', (req, res) => {
-  const id = req.params.id;
-
-  connection.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
-
-    res.json({ message: 'User deleted successfully' });
-  });
-});
-
-// รันเซิร์ฟเวอร์
+// // รันเซิร์ฟเวอร์
 // app.listen(3000, () => {
 //   console.log('Server is running on port 3000');
 // });
+
+
+const express = require('express')
+const cors =require('cors')
+const mysql = require('mysql2')
+require('dotenv').config()
+const app = express()
+
+app.use(cors())
+
+const connection = mysql.createConnection(process.env.DATABASE_URL)
+
+app.get('/', (req, res) => {
+    console.log('Hello world')
+    res.send('รักนะคะ จุ้บๆ')
+})
+
+app.get('/attractions', (req, res) => {
+    connection.query('SELECT * FROM users',
+    function(err, results , fields) {
+        res.send(results)
+    })
+})
+
 app.listen(process.env.PORT || 3000)

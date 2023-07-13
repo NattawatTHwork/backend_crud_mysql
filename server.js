@@ -25,8 +25,6 @@ app.post('/api/users', (req, res) => {
     'INSERT INTO users (rank, first_name, last_name, phone_number) VALUES (?, ?, ?, ?)',
     [rank, first_name, last_name, phone_number],
     (err, results) => {
-      // if (err) throw err;
-
       res.json({ message: 'User created successfully', id: results.insertId });
     }
   );
@@ -35,8 +33,6 @@ app.post('/api/users', (req, res) => {
 // อ่านข้อมูลทั้งหมด
 app.get('/api/users', (req, res) => {
   connection.query('SELECT * FROM users', (err, results) => {
-    // if (err) throw err;
-
     res.json(results);
   });
 });
@@ -46,8 +42,6 @@ app.get('/api/users/:id', (req, res) => {
   const id = req.params.id;
 
   connection.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
-    // if (err) throw err;
-
     if (results.length === 0) {
       res.status(404).json({ message: 'User not found' });
     } else {
@@ -65,8 +59,6 @@ app.put('/api/users/:id', (req, res) => {
     'UPDATE users SET rank = ?, first_name = ?, last_name = ?, phone_number = ? WHERE id = ?',
     [rank, first_name, last_name, phone_number, id],
     (err, results) => {
-      // if (err) throw err;
-
       res.json({ message: 'User updated successfully' });
     }
   );
@@ -77,8 +69,6 @@ app.delete('/api/users/:id', (req, res) => {
   const id = req.params.id;
 
   connection.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
-    // if (err) throw err;
-
     res.json({ message: 'User deleted successfully' });
   });
 });

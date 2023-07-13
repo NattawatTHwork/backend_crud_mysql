@@ -2,18 +2,25 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+require('dotenv').config()
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
 // กำหนดการเชื่อมต่อฐานข้อมูล MySQL
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'list',
-});
+// const connection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: '',
+//   database: 'list',
+// });
+const connection = mysql.createConnection(process.env.DATABASE_URL)
+if (connection) {
+  console.log('done')
+} else {
+  console.log('fail')
+}
 
 // เพิ่มข้อมูล
 app.post('/api/users', (req, res) => {
